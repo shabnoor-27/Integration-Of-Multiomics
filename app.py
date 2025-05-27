@@ -22,13 +22,12 @@ from matplotlib.colors import Normalize
 # App Configuration
 # -----------------------------
 st.set_page_config(page_title="Multi-Omics App", layout="wide")
-st.image("https://raw.githubusercontent.com/priyadarshinikp1/Multiomics-Integrator-app/main/logo.png", width=200)
 st.title("🧬 Multi-Omics Integration Vizzhy App")
 
 with st.sidebar:
     st.markdown("---")
-    st.markdown("**👨‍💻 Created by: PRIYADARSHINI**")
-    st.markdown("[LinkedIn](https://www.linkedin.com/in/priyadarshini24) | [GitHub](https://github.com/priyadarshinikp1)")
+    st.markdown("**👨‍💻 Created by: SHABNOOR**")
+    st.markdown(" [https://github.com/shabnoor-27)")
 
 
 # -----------------------------
@@ -36,9 +35,9 @@ with st.sidebar:
 # -----------------------------
 st.header("📁 Upload Omics Data")
 
-genomics = st.file_uploader("Upload Genomics CSV", type="csv")
-transcriptomics = st.file_uploader("Upload Transcriptomics CSV", type="csv")
-proteomics = st.file_uploader("Upload Proteomics CSV", type="csv")
+genomics = st.file_uploader("Upload genomics bi-sulfide Genelab_WGBS_CustomMitoFiltered_fgseaAll_allBins CSV", type="csv")
+transcriptomics = st.file_uploader("Upload Trans OSD-421_.Space.Flight.v.Ground.Control. CSV", type="csv")
+proteomics = st.file_uploader("Upload protein liver RR1_CASIS_processed_normalized CSV", type="csv")
 
 
 if genomics:
@@ -55,8 +54,9 @@ if proteomics:
 # -----------------------------
 st.sidebar.header("⚙️ Settings")
 
-cadd_thresh = float(st.sidebar.text_input("Min CADD Score (Genomics)", value="20"))
-logfc_thresh = float(st.sidebar.text_input("Min |logFC| (Transcriptomics)", value="1"))
+NES_thresh = float(st.sidebar.text_input("Min NES Score (Genomics)", value="≥ 1.5"))
+g_pval_thresh = float(st.sidebar.text_input("Max p-value (Transcriptomics)", value="0.05"))
+logfc_thresh = float(st.sidebar.text_input("Min |log2FC| (Transcriptomics)", value="1"))
 t_pval_thresh = float(st.sidebar.text_input("Max p-value (Transcriptomics)", value="0.05"))
 p_intensity_thresh = float(st.sidebar.text_input("Min Intensity (Proteomics)", value="1000"))
 
@@ -75,7 +75,7 @@ st.subheader("🔍 Filtered Data Preview")
 
 if genomics and transcriptomics and proteomics:
     try:
-        gdf_filtered = gdf[gdf['CADD'] >= cadd_thresh]
+        gdf_filtered = gdf[gdf['NES'] >= nes_thresh]
         tdf_filtered = tdf[(tdf['p_value'] <= t_pval_thresh)]
         
     # Filter Transcriptomics data based on logFC threshold
@@ -108,7 +108,7 @@ st.header("🎛️ Filter & Integrate")
 
 if genomics and transcriptomics and proteomics:
     try:
-        gdf_filtered = gdf[gdf['CADD'] >= cadd_thresh]
+        gdf_filtered = gdf[gdf['NES'] >= nes_thresh]
         tdf_filtered = tdf[(tdf['p_value'] <= t_pval_thresh) & (tdf['logFC'].abs() >= logfc_thresh)]
         pdf_filtered = pdf[pdf['Intensity'] >= p_intensity_thresh]
 
